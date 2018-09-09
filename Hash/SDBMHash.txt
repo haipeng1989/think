@@ -1,0 +1,9 @@
+unsigned int SDBMHash(char *str) {
+  unsigned int hash = 0;
+
+  while (*str) {
+    hash = 65599*hash + (*str++);
+  }
+
+  return (hash & 0x7FFFFFFF);
+}
