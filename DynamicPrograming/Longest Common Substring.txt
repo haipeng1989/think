@@ -1,0 +1,52 @@
+#include "stdafx.h"
+
+#include <string.h>
+
+int LCS(char str1[], char str2[])
+{
+	int array[10][10] = { 0 };
+	int biggest = 0;
+
+	int i, j;
+
+	int len1 = strlen(str1);
+	int len2 = strlen(str2);
+
+	for (i = 1; i <= len1; i++)
+	{
+		for (j = 1; j <= len2; j++)
+		{
+			if (str1[i-1] == str2[j-1])
+			{
+				array[i][j] = array[i - 1][j - 1] + 1;
+
+				if (array[i][j] > biggest)
+				{
+					biggest = array[i][j];
+				}
+			}
+			else
+			{
+				array[i][j] = 0;
+			}
+		}
+	}
+
+	return biggest;
+}
+
+int main()
+{
+	char str1[10];
+	scanf_s("%s", str1, 10);
+	
+	char str2[10];
+	scanf_s("%s", str2, 10);
+
+	int num;
+	num = LCS(str1, str2);
+
+	printf("%d ", num);
+
+	return 0;
+}
