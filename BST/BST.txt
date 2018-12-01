@@ -1,0 +1,170 @@
+struct BSTNode
+{
+	int _data;
+	BSTNode(int data)
+	{
+		_data = data;
+	}
+}
+
+void InitBSTree(BSTNode** pRoot)
+{
+    assert(pRoot);
+    *pRoot = NULL;
+}
+
+void InsertBSTree(BSTNode** pRoot, int data)
+{
+    BSTNode * pCur = NULL;
+    BSTNode * pParent = NULL;
+
+    //如果根结点为空，直接插入
+    if (NULL == (*pRoot))
+        *pRoot = new BSTNode(data);
+
+    pCur = *pRoot;
+    while (pCur)
+    {
+        if (pCur->_data > data)
+        {
+            pParent = pCur;
+            pCur = pCur->pLeft;
+        }
+        else if (pCur->_data < data)
+        {
+            pParent = pCur;
+            pCur = pCur->pRight;
+        }
+        //如果有结点和data相等，直接返回 
+        else
+        {
+            return;
+        }
+    }
+
+    pCur = new BSTNode(data);
+
+    //如果双亲的值大于它，则让双亲的左指针域指向它
+    if (pParent->_data > pCur->_data)
+    {
+        pParent->pLeft = pCur;
+    }
+    else
+    {
+        pParent->pRight = pCur;
+    }
+
+}
+
+BSTNode* FindBSTree(BSTNode* pRoot, int data)
+{
+    BSTNode * pCur = NULL;
+    if (NULL == pRoot)
+        return NULL;
+
+    pCur = pRoot;
+    while (pCur)
+    {
+        if (pCur->_data > data)
+        {
+            pCur = pCur->pLeft;
+        }
+        else if (pCur->_data < data)
+        {
+            pCur = pCur->pRight;
+        }
+        else if (pCur->_data == data)
+        {
+            return pCur;
+        }
+    }
+
+    return NULL;
+
+}
+
+void DeleteBSTree(BSTNode** pRoot, int data)
+{
+    BSTNode *pCur = NULL;
+    BSTNode *pParent = NULL;
+    BSTNode *pDel = NULL;
+
+    assert(pRoot);
+    if (NULL == (*pRoot))
+        return;
+
+    pCur = *pRoot;
+
+    while (pCur)
+    {
+        if (pCur->_data > data)
+        {
+            pParent = pCur;
+            pCur = pCur->pLeft;
+        }
+        else if (pCur->_data < data)
+        {
+            pParent = pCur;
+            pCur = pCur->pRight;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (pCur)
+    {
+        pDel = pCur;
+        //如果只有左孩子或者无左孩子
+        if (NULL == pCur->pRight)
+        {
+            //如果是根结点的左孩子
+            if ((*pRoot)->pLeft == pCur)
+                (*pRoot)->pLeft = pCur->pLeft;
+            else
+            {
+                if (pParent->pLeft == pCur)
+                    pParent->pLeft = pCur->pLeft;
+                else
+                    pParent->pRight = pCur->pLeft;
+            }
+        }
+        //如果只有右孩子
+        else if (pCur->pRight)
+        {
+            if ((*pRoot)->pRight == pCur)
+                (*pRoot)->pRight = pCur->pRight;
+            else
+            {
+                if (pParent->pRight == pCur)
+                    pParent->pRight = pCur->pRight;
+                else
+                    pParent->pLeft = pCur->pRight;
+            }
+        }
+        //如果有两个孩子
+        else
+        {
+            pParent = pCur;
+            pDel = pCur->pRight;
+
+            //查找右子树里最左边的结点
+            while (pDel->pLeft)
+            {
+                pParent = pDel;
+                pDel = pDel->pLeft;
+            }
+            //找到了，替换
+            pCur->_data = pDel->_data;
+
+            if (pParent->pLeft == pDel)
+                pParent->pLeft = pDel->pRight;
+            else
+                pParent->pRight = pDel->pRight;
+        }
+        free(pDel);
+        pDel = NULL;
+    }
+
+}
